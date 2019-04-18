@@ -147,7 +147,6 @@ const mergeConfigs = configs => {
 
     configs.forEach(config => {
       if (name === config.service) {
-        merged.functions = Object.assign({}, merged.functions, config.functions);
         merged.functions = deepmerge(merged.functions, config.functions);
       }
     });
