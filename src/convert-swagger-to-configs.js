@@ -49,7 +49,14 @@ const isTarget = (definition, options) => {
 
 const definitionToConfig = (definition, options) => {
   const service = extractServiceName(definition, options);
-  const functionName = extractFunctionName(definition, options);
+
+  let functionName;
+  if (options.functionName) {
+    functionName = options.functionName;
+  } else {
+    functionName = extractFunctionName(definition, options);
+  }
+
   const handler = `handler.${functionName}`;
 
   let path;

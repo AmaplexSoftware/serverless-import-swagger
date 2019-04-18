@@ -35,6 +35,8 @@ module.exports.exec = () => {
   .option('-O, --options-method', 'If add this option, added cors setting to get http event, and added OPTIONS method to api path that including other http method.')
   // Authorization
   .option('-a, --authorizer <name-or-arn>', 'Add custom authorizer to functions.')
+  // Common function name
+  .option('-F, --function-name <function-name>', 'Specify common function name. Overwrite operation-id option. (default none)')
   // Others
   .option('--operation-id', 'If this option is added and an API has operationId, the function is named from operationId.')
   .parse(process.argv);
@@ -49,6 +51,7 @@ module.exports.exec = () => {
     force: (commander.force) ? commander.force : false,
     cors: (commander.cors) ? commander.cors : false,
     authorizer: (commander.authorizer) ? commander.authorizer : undefined,
+    functionName: (commander.functionName) ? commander.functionName : undefined,
     operationId: (commander.operationId) ? commander.operationId : false,
     optionsMethod: (commander.optionsMethod) ? commander.optionsMethod : false,
   };
