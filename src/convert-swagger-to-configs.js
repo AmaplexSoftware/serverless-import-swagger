@@ -1,5 +1,6 @@
 'use strict';
 
+const deepmerge = require('deepmerge');
 const changeCase = require('change-case');
 
 module.exports = (swagger, options) => mergeConfigs(
@@ -147,6 +148,7 @@ const mergeConfigs = configs => {
     configs.forEach(config => {
       if (name === config.service) {
         merged.functions = Object.assign({}, merged.functions, config.functions);
+        merged.functions = deepmerge(merged.functions, config.functions);
       }
     });
 
