@@ -143,5 +143,38 @@ describe('convert-swagger-to-configs', () => {
         assert.equal(config.functions.getFooBar.events[0].http.authorizer, 'arn:aws:lambda:*:*:function:fake-authorizer')
       });
     });
+
+    describe('Common function name', () => {
+      it('should overwrite the function name of the generated function', () => {
+        const definition = {
+          method: 'get',
+          path: '/foo/bar',
+          methodObject: {
+            tags: ["sls-api"]
+          }
+        };
+        const option = {
+          apiPrefix: "sls",
+          functionName: "commonName"
+        };
+        let config = converter._definitionToConfig(definition, option);
+        assert.equal(config.functions.hasOwnProperty('commonName'), true);
+      });
+
+      it('should not overwrite the function name of the generated function', () => {
+        const definition = {
+          method: 'get',
+          path: '/foo/bar',
+          methodObject: {
+            tags: ["sls-api"]
+          }
+        };
+        const option = {
+          apiPrefix: "sls",
+        };
+        let config = converter._definitionToConfig(definition, option);
+        assert.equal(config.functions.hasOwnProperty('getFooBar'), true);
+      });
+    });
   });
 });

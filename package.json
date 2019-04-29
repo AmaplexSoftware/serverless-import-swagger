@@ -9,7 +9,7 @@
     "app-root-path": "^2.1.0",
     "change-case": "^3.1.0",
     "commander": "^2.19.0",
-    "deepmerge": "3.2.0",
+    "deepmerge": "^3.2.0",
     "graceful-fs": "^4.1.15",
     "js-yaml": "^3.12.2",
     "lodash": "^4.17.11",
