@@ -76,6 +76,14 @@ const definitionToConfig = (definition, options) => {
     }
   };
 
+  const params = extractParameters(definition);
+
+  if (params != null) {
+    httpEvent.http['request'] = {
+      parameters: params
+    };
+  }
+
   if (options.cors || (options.optionsMethod && (definition.method === 'get'))) {
     httpEvent.http['cors'] = true;
   }
@@ -136,6 +144,34 @@ const extractFunctionName = (definition, options) => {
   });
 
   return method.concat(resources, conditions).join('');
+};
+
+const extractParameters = (definition) => {
+
+  // Build the serverless parameters object
+  const serverlessParameters = {
+    paths: {}
+  };
+
+  let nbParams = 0;
+
+  const swaggerParameters = definition.methodObject.parameters;
+
+  if (swaggerParameters) {
+    for (const param of swaggerParameters) {
+      if (param.in === 'path' && param.required) {
+        nbParams++;
+        serverlessParameters.paths[param.name] = true;
+      }
+    }
+  }
+
+  if (nbParams === 0)
+  {
+    return null;
+  }
+
+  return serverlessParameters;
 };
 
 const mergeConfigs = configs => {

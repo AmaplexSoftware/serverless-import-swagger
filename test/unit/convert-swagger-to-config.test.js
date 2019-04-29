@@ -176,5 +176,68 @@ describe('convert-swagger-to-configs', () => {
         assert.equal(config.functions.hasOwnProperty('getFooBar'), true);
       });
     });
+
+    describe('extractParameters', () => {
+      it('should add path parameters to generated function', () => {
+        const definition = {
+          method: 'get',
+          path: '/foo/bar/{param1}/baz/{param2}',
+          methodObject: {
+            tags: ["sls-api"],
+            parameters: [
+              {
+                name: 'param1',
+                in: 'path',
+                required: true
+              },
+              {
+                name: 'param2',
+                in: 'path',
+                required: true
+              }
+            ]
+          }
+        };
+
+        const option = {
+          apiPrefix: "sls",
+          functionName: "commonName"
+        };
+
+        let config = converter._definitionToConfig(definition, option);
+        const pathParameters = config.functions.commonName.events[0].http.request.parameters.paths;
+
+        assert.equal(pathParameters['param1'], true);
+        assert.equal(pathParameters['param2'], true);
+      });
+
+      it('should not add parameters to generated function', () => {
+        const definition = {
+          method: 'get',
+          path: '/foo/bar/{param1}/baz/{param2}',
+          methodObject: {
+            tags: ["sls-api"],
+            parameters: [
+              {
+                name: 'param1',
+                in: 'body', // body param
+                required: true
+              }
+              // param2 not defined
+            ]
+          }
+        };
+
+        const option = {
+          apiPrefix: "sls",
+          functionName: "commonName"
+        };
+
+        let config = converter._definitionToConfig(definition, option);
+        const pathParameters = config.functions.commonName.events[0].http.request;
+
+        assert.equal(pathParameters, undefined);
+      });
+    });
   });
 });
